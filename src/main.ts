@@ -16,7 +16,11 @@ async function bootstrap() {
 }));
 
   app.use(helmet());
-  app.enableCors(); 
+  app.enableCors({
+  origin: ['https://www.soth.com.br', 'http://localhost:5173'], // Adicione o seu domínio real aqui!
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}); 
 
   // 2. ADICIONE ESTAS DUAS LINHAS PARA ACEITAR FOTOS GRANDES
   app.use(json({ limit: '50mb' }));
