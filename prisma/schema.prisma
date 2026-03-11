@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+enum OrderStatus {
+  AGUARDANDO_PAGAMENTO
+  AGUARDANDO_FABRICACAO
+  EM_PRODUCAO
+  AGUARDANDO_ENVIO
+  ENVIADO
+  ENTREGUE
+  CANCELADO
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  cpf       String?  @unique
+  phone     String?
+  address   String?
+  role      Role     @default(CLIENT)
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  subtitle    String?
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  category    String
+  image       String?  // Foto principal
+  images      String[] // Galeria completa
+  weight      Float?   @default(1.0)
+  height      Float?   @default(10)
+  width       Float?   @default(20)
+  length      Float?   @default(100)
+  createdAt   DateTime @default(now())
+}
+
+model Line {
+  id          String        @id @default(uuid())
+  name        String
+  type        String        // BAGS ou CASES
+  description String?
+  img         String?       // Foto da Linha
+  models      CustomModel[]
+}
+
+model CustomModel {
+  id                   String   @id @default(uuid())
+  lineId               String
+  line                 Line     @relation(fields: [lineId], references: [id])
+  name                 String
+  subtitle             String?
+  description          String?
+  price                Decimal  @db.Decimal(10, 2)
+  images               String[] // Galeria do Modelo
+  externalColors       String[] // Cores Externas cadastradas
+  internalColors       String[] // Cores Internas cadastradas
+  dynamicOptions       Json?    // Onde salvamos Categorias Extras (Ex: Fio do Bolso)
+  requiresMeasurements Boolean  @default(true)
+  weight               Float?   @default(1.0)
+  height               Float?   @default(10)
+  width                Float?   @default(20)
+  length               Float?   @default(100)
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  orderNumber   String      @unique
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  total         Decimal     @db.Decimal(10, 2)
+  status        OrderStatus @default(AGUARDANDO_PAGAMENTO)
+  paymentMethod String?
+  carrier       String?
+  trackingCode  String?
+  items         Json        // Snapshot imutável
+  createdAt     DateTime    @default(now())
+  customerName  String?
+  customerEmail String?
+  customerCPF   String?
+  customerPhone String?
+  address       String?
+}
