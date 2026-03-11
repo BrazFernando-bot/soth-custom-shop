@@ -4,50 +4,45 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './core/interceptors/transform.interceptor';
 import helmet from 'helmet';
-import { json, urlencoded } from 'express'; // <--- 1. ADICIONE ESTE IMPORT
+import { json, urlencoded } from 'express';
 
-// ... imports
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // PREFIXO GLOBAL - OBRIGATÓRIO PARA O NESTJS ENTENDER O /api/v1
-  app.setGlobalPrefix('api/v1');
-
-  // BLINDAGEM CORS - LIBERANDO SEU DOMÍNIO
+  // 1. Segurança
+  app.use(helmet());
+  
+  // 2. CORS (Ajuste para seu domínio de produção)
   app.enableCors({
-    origin: ['https://www.soth.com.br', 'https://soth.com.br'],
+    origin: [
+      'https://www.soth.com.br', 
+      'https://soth.com.br',
+      'http://localhost:5173'
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 
-  // ... restante do código
-  await app.listen(process.env.PORT || 3000);
-}
-
-  app.use(helmet());
-  // No src/main.ts
-app.enableCors({
-  origin: [
-    'https://soth.com.br', 
-    'https://www.soth.com.br',
-    'http://localhost:5173' // Deixe aqui para testar localmente
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  credentials: true,
-});
-
-  // 2. ADICIONE ESTAS DUAS LINHAS PARA ACEITAR FOTOS GRANDES
+  // 3. Limite de tamanho para upload de fotos
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  // 4. Pipes e Interceptores
+  app.useGlobalPipes(new ValidationPipe({ 
+    whitelist: true, 
+    forbidNonWhitelisted: true, 
+    transform: true 
+  }));
   app.useGlobalInterceptors(new TransformInterceptor());
 
+  // 5. Prefixo Global
   app.setGlobalPrefix('api/v1');
 
+  // 6. Porta
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
   
   console.log(`🚀 SOTH BACKEND inicializado na porta ${port}`);
 }
+
 bootstrap();
