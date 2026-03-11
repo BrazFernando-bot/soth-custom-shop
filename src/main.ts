@@ -6,14 +6,23 @@ import { TransformInterceptor } from './core/interceptors/transform.interceptor'
 import helmet from 'helmet';
 import { json, urlencoded } from 'express'; // <--- 1. ADICIONE ESTE IMPORT
 
+// ... imports
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe({
-  whitelist: true, // Remove campos que não estão no DTO
-  forbidNonWhitelisted: true, // Dá erro se enviar campos extras
-  transform: true, // Converte tipos (ex: string "10" vira number 10)
-}));
+  // PREFIXO GLOBAL - OBRIGATÓRIO PARA O NESTJS ENTENDER O /api/v1
+  app.setGlobalPrefix('api/v1');
+
+  // BLINDAGEM CORS - LIBERANDO SEU DOMÍNIO
+  app.enableCors({
+    origin: ['https://www.soth.com.br', 'https://soth.com.br'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+  // ... restante do código
+  await app.listen(process.env.PORT || 3000);
+}
 
   app.use(helmet());
   // No src/main.ts
