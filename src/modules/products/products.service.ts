@@ -8,7 +8,7 @@ export class ProductsService {
   constructor(private prisma: PrismaService, private storageService: StorageService) {}
 
   async create(data: CreateProductDto) {
-    const imageUrls = await this.storageService.uploadMany(data.images);
+    const imageUrls = await this.storageService.uploadMany(data.images ?? []);
     return this.prisma.product.create({
       data: {
         name: data.name,
