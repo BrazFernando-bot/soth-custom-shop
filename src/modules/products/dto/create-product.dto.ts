@@ -1,25 +1,27 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
-import { Type } from 'class-transformer'; // <--- Importação necessária
+import { Type } from 'class-transformer';
 
 export class CreateProductDto {
   @IsString() @IsNotEmpty() name: string;
   @IsString() @IsOptional() subtitle?: string;
   @IsString() @IsOptional() description?: string;
   
-  @Type(() => Number) // Força a conversão de "1200" (string) para 1200 (number)
+  @Type(() => Number)
   @IsNumber() @IsNotEmpty() price: number;
   
   @IsString() @IsNotEmpty() category: string;
   
   @IsOptional() @IsArray() images?: string[];
+  @IsOptional() @IsString() image?: string;
 
-  // Campos que o formulário está enviando
+  // NOVOS CAMPOS QUE O BACKEND ESTAVA BLOQUEANDO
   @IsOptional() @IsString() lineId?: string;
   @IsOptional() @IsBoolean() requiresMeasurements?: boolean;
   @IsOptional() @IsString() externalColors?: string;
   @IsOptional() @IsString() internalColors?: string;
-  @IsOptional() @IsString() dynamicOptions?: string;
+  @IsOptional() @IsArray() dynamicOptions?: any[];
 
+  // CAMPOS DE MEDIDA
   @Type(() => Number) @IsOptional() @IsNumber() weight?: number;
   @Type(() => Number) @IsOptional() @IsNumber() height?: number;
   @Type(() => Number) @IsOptional() @IsNumber() width?: number;
