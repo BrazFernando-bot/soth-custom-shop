@@ -17,9 +17,9 @@ export class CustomShopService {
     return this.prisma.line.create({
       data: {
         name: data.name,
-        description: data.description,
-        type: data.type,
-        img: imageUrl // O banco usa 'img'
+        description: data.description || '',
+        type: data.type as string || 'BAGS',
+        img: imageUrl || '
       }
     });
   }
@@ -54,8 +54,8 @@ export class CustomShopService {
     return this.prisma.customModel.create({
       data: {
         name: data.name,
-        price: data.price,
-        description: data.description,
+        price: Number(data.price) || 0,
+        description: data.description || '',
         images: imageUrls,
         externalColors: data.externalColors,
         internalColors: data.internalColors,
@@ -65,7 +65,7 @@ export class CustomShopService {
         height: Number(data.height),
         width: Number(data.width),
         length: Number(data.length),
-        line: { connect: { id: data.lineId } }
+        line: { connect: { id: data.lineId as string } }
       }
     });
   }
@@ -79,8 +79,8 @@ export class CustomShopService {
       where: { id },
       data: {
         name: data.name,
-        price: data.price,
-        description: data.description,
+        price: Number(data.price) || 0,
+        description: data.description || '',
         images: imageUrls,
         externalColors: data.externalColors,
         internalColors: data.internalColors,
