@@ -1,9 +1,11 @@
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../shared/database/prisma.service';
+import { Role } from '@prisma/client';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class AuthService {
@@ -19,14 +21,14 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
     
-    // CORREÇÃO: Converter a string do 'role' para o Enum do Prisma
-    const roleValue = (data.role?.toUpperCase() === 'ADMIN') ? 'ADMIN' : 'CUSTOMER';
+    // CORREÇÃO: Use o Enum Role que o Prisma entende
+    const roleValue = (data.role?.toUpperCase() === 'ADMIN') ? Role.ADMIN : Role.CLIENT;
 
     const user = await this.prisma.user.create({
       data: { 
         ...data, 
         password: hashedPassword,
-        role: roleValue // <--- Agora enviamos o Enum correto
+        role: roleValue // <--- Agora ele recebe o tipo correto
       },
     });
 
