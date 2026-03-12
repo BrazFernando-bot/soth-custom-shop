@@ -1,26 +1,11 @@
-import { IsNotEmpty, IsString, IsOptional, IsIn } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsArray } from 'class-validator';
 
 export class CreateLineDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  // CORREÇÃO: Aceita agora todas as variações para evitar o erro 400
-  @IsIn(['BAG', 'CASE', 'BAGS', 'CASES']) 
-  type: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsString()
-  @IsOptional()
-  image?: string; 
-  
-  // Campo 'img' como opcional para evitar erro caso o front envie um ou outro
-  @IsString()
-  @IsOptional()
-  img?: string;
+  @IsString() @IsNotEmpty() name: string;
+  @IsString() @IsOptional() subtitle?: string;
+  @IsString() @IsOptional() description?: string;
+  @IsString() @IsOptional() type?: string; // Tornamos opcional para não travar
+  @IsOptional() @IsArray() images?: string[];
+  @IsOptional() @IsString() img?: string;
+  @IsOptional() @IsArray() colors?: string[];
 }
