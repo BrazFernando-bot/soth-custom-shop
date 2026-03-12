@@ -66,9 +66,8 @@ export class AuthService {
         email: 'admin@soth.com',
         name: 'Diretor Soth',
         password: hashedPassword,
-        role: 'ADMIN',
+        role: Role.ADMIN, // <--- Aqui também
       },
     });
     return { message: 'Admin criado!', email: admin.email };
   }
-}
