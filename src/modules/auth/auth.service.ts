@@ -18,14 +18,21 @@ export class AuthService {
     if (userExists) throw new ConflictException('Este e-mail já está cadastrado');
 
     const hashedPassword = await bcrypt.hash(data.password, 10);
+    
+    // CORREÇÃO: Converter a string do 'role' para o Enum do Prisma
+    const roleValue = (data.role?.toUpperCase() === 'ADMIN') ? 'ADMIN' : 'CUSTOMER';
+
     const user = await this.prisma.user.create({
-      data: { ...data, password: hashedPassword },
+      data: { 
+        ...data, 
+        password: hashedPassword,
+        role: roleValue // <--- Agora enviamos o Enum correto
+      },
     });
 
     const { password, ...result } = user;
     return result;
   }
-
   // LOGIN (Gera o Token JWT)
   async login(data: LoginDto) {
     const user = await this.prisma.user.findUnique({ where: { email: data.email } });
