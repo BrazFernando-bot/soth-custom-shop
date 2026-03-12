@@ -71,3 +71,4 @@ export class AuthService {
     });
     return { message: 'Admin criado!', email: admin.email };
   }
+}
