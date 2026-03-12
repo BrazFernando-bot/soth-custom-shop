@@ -1,50 +1,24 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, IsBoolean } from 'class-validator';
 
 export class CreateCustomModelDto {
-  @IsString()
-  @IsNotEmpty()
-  lineId: string;
+  @IsString() @IsNotEmpty() lineId: string;
+  @IsString() @IsNotEmpty() name: string;
+  @IsString() @IsOptional() subtitle?: string;
+  @IsString() @IsOptional() description?: string;
+  
+  @IsOptional() @IsNumber() price?: number;
+  @IsOptional() @IsBoolean() requiresMeasurements?: boolean;
 
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional() dynamicOptions?: any;
+  @IsOptional() externalColors?: any;
+  @IsOptional() internalColors?: any;
 
-  @IsString()
-  @IsOptional()
-  subtitle?: string;
+  @IsOptional() @IsArray() images?: string[];
+  @IsOptional() @IsString() image?: string;
 
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  price: number;
-
-  @IsBoolean()
-  @IsOptional()
-  requiresMeasurements?: boolean;
-
-  // --- MUDANÇA AQUI: Alinhando com os campos de Cores e Opções do Admin ---
-  @IsOptional()
-  dynamicOptions?: any;
-
-  @IsArray()
-  @IsOptional()
-  externalColors?: string[];
-
-  @IsArray()
-  @IsOptional()
-  internalColors?: string[];
-
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  images?: string[];
-
-  // --- MEDIDAS LOGÍSTICAS ---
-  @IsOptional() weight?: number;
-  @IsOptional() height?: number;
-  @IsOptional() width?: number;
-  @IsOptional() length?: number;
+  // Medidas
+  @IsOptional() @IsNumber() weight?: number;
+  @IsOptional() @IsNumber() height?: number;
+  @IsOptional() @IsNumber() width?: number;
+  @IsOptional() @IsNumber() length?: number;
 }
