@@ -28,11 +28,25 @@ export class AuthService {
 
   // LOGIN (Gera o Token JWT)
   async login(data: LoginDto) {
-    const user = await this.prisma.user.findUnique({ where: { email: data.email } });
-    
-    if (!user || !(await bcrypt.compare(data.password, user.password))) {
-      throw new UnauthorizedException('E-mail ou senha inválidos');
-    }
+  const user = await this.prisma.user.findUnique({ where: { email: data.email } });
+  
+  if (!user) {
+    console.log("LOGIN ERRO: Usuário não encontrado no banco:", data.email);
+    throw new UnauthorizedException('E-mail ou senha inválidos');
+  }
+
+  const isMatch = await bcrypt.compare(data.password, user.password);
+  if (!isMatch) {
+    console.log("LOGIN ERRO: Senha incorreta para:", data.email);
+    throw new UnauthorizedException('E-mail ou senha inválidos');
+  }
+
+  const payload = { sub: user.id, email: user.email, role: user.role };
+  return {
+    user: { id: user.id, name: user.name, email: user.email, role: user.role },
+    accessToken: this.jwtService.sign(payload), // <--- O TOKEN É GERADO AQUI
+  };
+}
 
     const payload = { sub: user.id, email: user.email, role: user.role };
     
