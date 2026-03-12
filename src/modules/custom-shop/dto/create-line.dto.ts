@@ -1,11 +1,16 @@
-import { IsNotEmpty, IsString, IsOptional, IsArray } from 'class-validator';
-
 export class CreateLineDto {
   @IsString() @IsNotEmpty() name: string;
-  @IsString() @IsOptional() subtitle?: string;
   @IsString() @IsOptional() description?: string;
-  @IsString() @IsOptional() type?: string; // Tornamos opcional para não travar
-  @IsOptional() @IsArray() images?: string[];
-  @IsOptional() @IsString() img?: string;
-  @IsOptional() @IsArray() colors?: string[];
+  @IsString() @IsOptional() type?: string; 
+  
+  // Adicione estes campos como opcionais para o ValidationPipe não barrar
+  @IsOptional() price?: any;
+  @IsOptional() weight?: any;
+  @IsOptional() height?: any;
+  @IsOptional() width?: any;
+  @IsOptional() length?: any;
+  @IsOptional() externalColors?: any;
+  @IsOptional() internalColors?: any;
+  @IsOptional() dynamicOptions?: any;
+  @IsOptional() images?: any;
 }
