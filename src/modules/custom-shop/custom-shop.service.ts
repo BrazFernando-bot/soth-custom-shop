@@ -19,7 +19,7 @@ export class CustomShopService {
         name: data.name,
         description: data.description || '',
         type: data.type as string || 'BAGS',
-        img: imageUrl || '
+        img: imageUrl || ''
       }
     });
   }
