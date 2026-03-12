@@ -11,17 +11,18 @@ export class CreateProductDto {
   
   @IsString() @IsNotEmpty() category: string;
   
+  // Imagens
   @IsOptional() @IsArray() images?: string[];
   @IsOptional() @IsString() image?: string;
 
-  // NOVOS CAMPOS QUE O BACKEND ESTAVA BLOQUEANDO
+  // Logística e Customização
   @IsOptional() @IsString() lineId?: string;
   @IsOptional() @IsBoolean() requiresMeasurements?: boolean;
   @IsOptional() @IsString() externalColors?: string;
   @IsOptional() @IsString() internalColors?: string;
   @IsOptional() @IsArray() dynamicOptions?: any[];
 
-  // CAMPOS DE MEDIDA
+  // Dimensões
   @Type(() => Number) @IsOptional() @IsNumber() weight?: number;
   @Type(() => Number) @IsOptional() @IsNumber() height?: number;
   @Type(() => Number) @IsOptional() @IsNumber() width?: number;
