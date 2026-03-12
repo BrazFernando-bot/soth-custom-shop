@@ -6,7 +6,7 @@ export class CreateCustomModelDto {
   @IsString() @IsOptional() subtitle?: string;
   @IsString() @IsOptional() description?: string;
   
-  @IsOptional() @IsNumber() price?: number;
+  @IsOptional() @IsNumber() price: number;
   @IsOptional() @IsBoolean() requiresMeasurements?: boolean;
 
   @IsOptional() dynamicOptions?: any;
