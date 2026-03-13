@@ -23,7 +23,7 @@ export class CreateLineDto {
 
   @IsOptional()
   @IsString()
-  img?: string;
+  image?: string;
 
   // Campos extras que você estava enviando e dando erro
   @IsOptional() price?: any;
