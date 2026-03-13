@@ -26,4 +26,5 @@ export class CreateCustomModelDto {
   @Type(() => Number) @IsOptional() @IsNumber() height?: number;
   @Type(() => Number) @IsOptional() @IsNumber() width?: number;
   @Type(() => Number) @IsOptional() @IsNumber() length?: number;
+  @IsOptional() @IsString() category?: string;
 }
